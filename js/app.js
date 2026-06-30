@@ -1,11 +1,14 @@
 // 엔트리포인트: 탭 전환 + 각 탭 초기화
 import { initVideoTab } from "./tab-video.js";
 import { initAudioTab } from "./tab-audio.js";
+import { initGifTab } from "./tab-gif.js";
+import { initGuide } from "./guide.js";
 
 function setupTabs() {
   const tabs = [
     { btn: document.getElementById("tab-btn-video"), panel: document.getElementById("panel-video") },
     { btn: document.getElementById("tab-btn-audio"), panel: document.getElementById("panel-audio") },
+    { btn: document.getElementById("tab-btn-gif"), panel: document.getElementById("panel-gif") },
   ];
 
   function activate(index) {
@@ -35,6 +38,8 @@ function setupTabs() {
 setupTabs();
 initVideoTab();
 initAudioTab();
+initGifTab();
+initGuide();
 
 // SharedArrayBuffer 미지원 환경 안내 (coi-serviceworker가 첫 방문 시 리로드하므로 보통 두 번째 로드부터 OK)
 if (typeof window !== "undefined" && !window.crossOriginIsolated) {

@@ -11,7 +11,9 @@
 - **오디오 포맷 변환** — mp3 / wav / ogg / m4a 상호 변환, 비트레이트 선택
 - **오디오 커팅** — 시작 / 끝 구간 지정해서 자르기 (파형 표시)
 - **비디오에서 오디오 추출** — 영상 파일을 올려 오디오만 변환
-- **서버 전송 없음** — 모든 처리는 브라우저 안에서 ffmpeg.wasm으로. 파일은 어디에도 업로드되지 않습니다.
+- **GIF 편집** — 기존 GIF를 프레임 단위로 분해(필름스트립) → 원하는 프레임만 PNG로 추출 / 재생 속도 조절 후 새 GIF로 재조합
+- **첫 방문 가이드** — 처음 열면 사용법 안내 팝업 (오늘 다시 보지 않기 지원)
+- **서버 전송 없음** — 모든 처리는 브라우저 안에서. 파일은 어디에도 업로드되지 않습니다.
 
 ## 사용법
 
@@ -22,7 +24,8 @@
 
 ## 기술 스택
 
-- [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) (`@ffmpeg/ffmpeg` 0.12.x, `@ffmpeg/core(-mt)` 0.12.10)
+- [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) (`@ffmpeg/ffmpeg` 0.12.x, `@ffmpeg/core(-mt)` 0.12.10) — 비디오·오디오 처리
+- [gifuct-js](https://github.com/matt-way/gifuct) (GIF 디코딩) + [gifenc](https://github.com/mattdesl/gifenc) (GIF 인코딩) — GIF 편집 탭
 - 순수 HTML / CSS / JS (ES Modules)
 - [coi-serviceworker](https://github.com/gzuidhof/coi-serviceworker) — GitHub Pages에서 COOP/COEP 헤더를 주입해 `SharedArrayBuffer`(멀티스레드) 활성화
 

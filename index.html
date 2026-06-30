@@ -55,6 +55,9 @@
     <button class="tab-btn" role="tab" id="tab-btn-audio" aria-controls="panel-audio" aria-selected="false" tabindex="-1">
       <span class="tab-emoji" aria-hidden="true">🎵</span> 오디오 변환 / 커터
     </button>
+    <button class="tab-btn" role="tab" id="tab-btn-gif" aria-controls="panel-gif" aria-selected="false" tabindex="-1">
+      <span class="tab-emoji" aria-hidden="true">🖼️</span> GIF 편집
+    </button>
   </nav>
 
   <main id="main" class="wrap">
@@ -260,6 +263,85 @@
       </div>
     </section>
 
+    <!-- ===================== 탭 3: GIF 편집 (프레임 추출 / 속도 조절) ===================== -->
+    <section id="panel-gif" class="panel" role="tabpanel" aria-labelledby="tab-btn-gif" hidden>
+
+      <div class="dropzone" id="gif-dropzone" tabindex="0" role="button" aria-label="GIF 파일 업로드">
+        <input type="file" id="gif-input" accept="image/gif" hidden />
+        <div class="dropzone-icon" aria-hidden="true">🖼️</div>
+        <p class="dropzone-title">GIF 파일을 끌어다 놓거나 클릭해서 선택</p>
+        <p class="dropzone-sub">기존 GIF를 프레임으로 분해 · 추출 · 속도 조절</p>
+      </div>
+
+      <div class="editor" id="gif-editor" hidden>
+        <div class="editor-head">
+          <div class="file-meta" id="gif-file-meta"></div>
+          <button class="btn-text" id="gif-reset" type="button">다른 파일 선택</button>
+        </div>
+
+        <!-- 미리보기 + 필름스트립 -->
+        <div class="gif-preview-row">
+          <img id="gif-preview" class="media-preview gif-preview" alt="GIF 미리보기" />
+          <div class="gif-stat" id="gif-stat"></div>
+        </div>
+
+        <div class="filmstrip-head">
+          <span>프레임 <span id="gif-frame-count">0</span>개</span>
+          <div class="filmstrip-actions">
+            <button class="btn-mini" id="gif-select-all" type="button">전체 선택</button>
+            <button class="btn-mini" id="gif-select-none" type="button">선택 해제</button>
+          </div>
+        </div>
+        <div class="filmstrip" id="gif-filmstrip" role="group" aria-label="프레임 목록"></div>
+
+        <div class="gif-options-grid">
+          <!-- 프레임 추출 -->
+          <div class="gif-card">
+            <h3 class="gif-card-title">선택 프레임 추출</h3>
+            <p class="opt-note"><span id="gif-selected-count">0</span>개 프레임 선택됨. PNG로 내려받습니다.</p>
+            <button class="btn-primary" id="gif-extract" type="button">선택 프레임 PNG 다운로드</button>
+          </div>
+
+          <!-- 속도 조절 + 재조합 -->
+          <div class="gif-card">
+            <h3 class="gif-card-title">재생 속도 조절</h3>
+            <div class="speed-presets" id="gif-speed-presets">
+              <button class="btn-mini" data-speed="0.5" type="button">0.5×</button>
+              <button class="btn-mini is-active" data-speed="1" type="button">1×</button>
+              <button class="btn-mini" data-speed="1.5" type="button">1.5×</button>
+              <button class="btn-mini" data-speed="2" type="button">2×</button>
+            </div>
+            <div class="speed-control">
+              <input type="range" id="gif-speed-range" min="0.25" max="4" step="0.05" value="1" />
+              <div class="speed-num">
+                <input type="number" id="gif-speed-num" min="0.25" max="4" step="0.05" value="1" />
+                <span>×</span>
+              </div>
+            </div>
+            <p class="opt-note" id="gif-speed-note">원본 속도 그대로. 선택한 프레임만으로 재조합하려면 위에서 프레임을 고르세요(전체 선택 시 모든 프레임 사용).</p>
+            <button class="btn-primary" id="gif-rebuild" type="button">새 GIF 만들기</button>
+          </div>
+        </div>
+
+        <div class="progress-block" id="gif-progress" hidden>
+          <div class="progress-row">
+            <span id="gif-progress-label">처리 중…</span>
+            <span id="gif-progress-pct">0%</span>
+          </div>
+          <div class="bar"><div id="gif-progress-bar" class="bar-fill"></div></div>
+        </div>
+
+        <div class="result-block" id="gif-result" hidden>
+          <h3 class="result-title">결과</h3>
+          <div class="result-preview" id="gif-result-preview"></div>
+          <div class="result-actions">
+            <a class="btn-primary" id="gif-download" download>다운로드</a>
+            <span class="result-size" id="gif-result-size"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -268,6 +350,27 @@
       <p>Made by <a href="https://github.com/hanariago" target="_blank" rel="noopener">Lena</a> · MIT License</p>
     </div>
   </footer>
+
+  <!-- 첫 방문 가이드 팝업 -->
+  <div id="guide-overlay" class="guide-overlay" hidden>
+    <div class="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+      <button class="guide-x" id="guide-x" type="button" aria-label="닫기">×</button>
+      <h2 class="guide-title" id="guide-title">미디어 변환기에 오신 걸 환영해요 👋</h2>
+      <p class="guide-lead">모든 처리는 <strong>브라우저 안에서</strong> 이루어져요. 파일은 어디에도 업로드되지 않습니다.</p>
+      <ul class="guide-list">
+        <li><span aria-hidden="true">🎬</span> <strong>비디오 → GIF / 트리머</strong> — 영상의 원하는 구간을 GIF로 만들거나 MP4로 잘라요.</li>
+        <li><span aria-hidden="true">🎵</span> <strong>오디오 변환 / 커터</strong> — mp3·wav·ogg·m4a 변환, 구간 자르기, 영상에서 오디오 추출.</li>
+        <li><span aria-hidden="true">🖼️</span> <strong>GIF 편집</strong> — 기존 GIF를 프레임으로 분해해 PNG로 추출하거나, 속도를 바꿔 새 GIF로 재조합.</li>
+      </ul>
+      <p class="guide-hint">처음 변환할 때 변환 엔진(약 25–31MB)을 한 번 내려받아요. 잠깐 기다리면 이후엔 빨라요.</p>
+      <div class="guide-footer">
+        <label class="guide-dont">
+          <input type="checkbox" id="guide-dont-show" /> 오늘 다시 보지 않기
+        </label>
+        <button class="btn-primary guide-close-btn" id="guide-close" type="button">닫기</button>
+      </div>
+    </div>
+  </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
