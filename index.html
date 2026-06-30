@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#3D6B5E" />
+  <title>미디어 변환기 · 비디오→GIF · 오디오 변환</title>
+  <meta name="description" content="비디오를 GIF로, 오디오 포맷을 변환하고 자르는 도구. 브라우저에서 ffmpeg.wasm으로 처리하며 서버 전송이 없습니다." />
+
+  <!-- COOP/COEP 헤더 우회 (GitHub Pages에서 SharedArrayBuffer 활성화). 모듈 스크립트보다 먼저 실행되어야 함. -->
+  <script src="coi-serviceworker.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">◐</span>
+        <div class="brand-text">
+          <h1>미디어 변환기</h1>
+          <p>비디오 → GIF · 오디오 변환 / 커팅</p>
+        </div>
+      </div>
+      <p class="privacy-badge" title="모든 처리는 브라우저 안에서 이루어집니다.">
+        <span aria-hidden="true">🔒</span> 서버 전송 없음
+      </p>
+    </div>
+  </header>
+
+  <!-- ffmpeg 엔진 로딩 상태 배너 (공통) -->
+  <div id="engine-banner" class="engine-banner" hidden>
+    <div class="wrap engine-inner">
+      <div class="engine-spinner" aria-hidden="true"></div>
+      <div class="engine-text">
+        <strong id="engine-title">변환 엔진 준비 중…</strong>
+        <span id="engine-detail">ffmpeg.wasm 코어를 내려받고 있어요.</span>
+      </div>
+      <div class="engine-progress">
+        <div class="bar"><div id="engine-bar" class="bar-fill"></div></div>
+        <span id="engine-percent" class="engine-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="tabs wrap" role="tablist" aria-label="도구 선택">
+    <button class="tab-btn is-active" role="tab" id="tab-btn-video" aria-controls="panel-video" aria-selected="true">
+      <span class="tab-emoji" aria-hidden="true">🎬</span> 비디오 → GIF / 트리머
+    </button>
+    <button class="tab-btn" role="tab" id="tab-btn-audio" aria-controls="panel-audio" aria-selected="false" tabindex="-1">
+      <span class="tab-emoji" aria-hidden="true">🎵</span> 오디오 변환 / 커터
+    </button>
+  </nav>
+
+  <main id="main" class="wrap">
+
+    <!-- ===================== 탭 1: 비디오 → GIF / 트리머 ===================== -->
+    <section id="panel-video" class="panel is-active" role="tabpanel" aria-labelledby="tab-btn-video">
+
+      <!-- 업로드 전: 드래그앤드롭 -->
+      <div class="dropzone" id="video-dropzone" tabindex="0" role="button" aria-label="비디오 파일 업로드">
+        <input type="file" id="video-input" accept="video/*" hidden />
+        <div class="dropzone-icon" aria-hidden="true">🎬</div>
+        <p class="dropzone-title">비디오 파일을 끌어다 놓거나 클릭해서 선택</p>
+        <p class="dropzone-sub">mp4 · mov · webm · mkv · avi 등</p>
+      </div>
+
+      <!-- 업로드 후: 편집 영역 -->
+      <div class="editor" id="video-editor" hidden>
+        <div class="editor-head">
+          <div class="file-meta" id="video-file-meta"></div>
+          <button class="btn-text" id="video-reset" type="button">다른 파일 선택</button>
+        </div>
+
+        <div class="editor-grid">
+          <div class="preview-col">
+            <video id="video-preview" class="media-preview" controls playsinline></video>
+            <div class="trim-block">
+              <div class="trim-head">
+                <span>구간 선택</span>
+                <span class="trim-readout" id="video-trim-readout">0:00 – 0:00</span>
+              </div>
+              <div class="range-slider" id="video-range"></div>
+              <div class="time-inputs">
+                <label>시작 <input type="text" id="video-start" class="time-input" inputmode="decimal" value="0:00" /></label>
+                <label>끝 <input type="text" id="video-end" class="time-input" inputmode="decimal" value="0:00" /></label>
+                <button class="btn-mini" id="video-set-start" type="button" title="현재 재생 위치를 시작으로">⇤ 현재</button>
+                <button class="btn-mini" id="video-set-end" type="button" title="현재 재생 위치를 끝으로">현재 ⇥</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="options-col">
+            <div class="mode-switch" role="radiogroup" aria-label="출력 형식">
+              <button class="mode-opt is-active" id="mode-gif" role="radio" aria-checked="true" type="button">GIF로 변환</button>
+              <button class="mode-opt" id="mode-mp4" role="radio" aria-checked="false" type="button">MP4로 트리밍</button>
+            </div>
+
+            <!-- GIF 옵션 -->
+            <div class="opt-group" id="gif-options">
+              <label class="field">
+                <span>가로 해상도</span>
+                <select id="gif-width">
+                  <option value="0">원본 유지</option>
+                  <option value="640">640 px</option>
+                  <option value="480" selected>480 px</option>
+                  <option value="320">320 px</option>
+                  <option value="240">240 px</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>프레임레이트</span>
+                <select id="gif-fps">
+                  <option value="10">10 fps</option>
+                  <option value="15" selected>15 fps</option>
+                  <option value="20">20 fps</option>
+                  <option value="24">24 fps</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>품질</span>
+                <select id="gif-quality">
+                  <option value="high">높음 (256색, 선명)</option>
+                  <option value="medium" selected>보통 (128색)</option>
+                  <option value="low">낮음 (64색, 가벼움)</option>
+                </select>
+              </label>
+            </div>
+
+            <!-- MP4 옵션 -->
+            <div class="opt-group" id="mp4-options" hidden>
+              <p class="opt-note">선택한 구간을 MP4로 다시 인코딩합니다. 프레임 단위로 정확하게 잘려요. 긴 구간은 시간이 걸릴 수 있습니다.</p>
+              <label class="field">
+                <span>화질</span>
+                <select id="mp4-quality">
+                  <option value="18">높음</option>
+                  <option value="23" selected>보통</option>
+                  <option value="28">낮음 (가벼움)</option>
+                </select>
+              </label>
+            </div>
+
+            <button class="btn-primary" id="video-convert" type="button">
+              <span class="btn-label">GIF 만들기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 진행률 -->
+        <div class="progress-block" id="video-progress" hidden>
+          <div class="progress-row">
+            <span id="video-progress-label">변환 중…</span>
+            <span id="video-progress-pct">0%</span>
+          </div>
+          <div class="bar"><div id="video-progress-bar" class="bar-fill"></div></div>
+          <button class="btn-text danger" id="video-cancel" type="button">취소</button>
+        </div>
+
+        <!-- 결과 -->
+        <div class="result-block" id="video-result" hidden>
+          <h3 class="result-title">결과</h3>
+          <div class="result-preview" id="video-result-preview"></div>
+          <div class="result-actions">
+            <a class="btn-primary" id="video-download" download>다운로드</a>
+            <span class="result-size" id="video-result-size"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 탭 2: 오디오 변환 / 커터 ===================== -->
+    <section id="panel-audio" class="panel" role="tabpanel" aria-labelledby="tab-btn-audio" hidden>
+
+      <div class="dropzone" id="audio-dropzone" tabindex="0" role="button" aria-label="오디오 또는 비디오 파일 업로드">
+        <input type="file" id="audio-input" accept="audio/*,video/*" hidden />
+        <div class="dropzone-icon" aria-hidden="true">🎵</div>
+        <p class="dropzone-title">오디오 파일을 끌어다 놓거나 클릭해서 선택</p>
+        <p class="dropzone-sub">mp3 · wav · m4a · ogg · flac · 또는 비디오에서 오디오 추출</p>
+      </div>
+
+      <div class="editor" id="audio-editor" hidden>
+        <div class="editor-head">
+          <div class="file-meta" id="audio-file-meta"></div>
+          <button class="btn-text" id="audio-reset" type="button">다른 파일 선택</button>
+        </div>
+
+        <div class="editor-grid">
+          <div class="preview-col">
+            <div class="audio-stage">
+              <canvas id="audio-waveform" class="waveform" aria-hidden="true"></canvas>
+              <audio id="audio-preview" class="media-preview audio" controls></audio>
+            </div>
+            <div class="trim-block">
+              <div class="trim-head">
+                <label class="check-inline">
+                  <input type="checkbox" id="audio-cut-enable" /> 구간 커팅
+                </label>
+                <span class="trim-readout" id="audio-trim-readout">0:00 – 0:00</span>
+              </div>
+              <div class="range-slider is-disabled" id="audio-range"></div>
+              <div class="time-inputs">
+                <label>시작 <input type="text" id="audio-start" class="time-input" inputmode="decimal" value="0:00" disabled /></label>
+                <label>끝 <input type="text" id="audio-end" class="time-input" inputmode="decimal" value="0:00" disabled /></label>
+                <button class="btn-mini" id="audio-set-start" type="button" disabled>⇤ 현재</button>
+                <button class="btn-mini" id="audio-set-end" type="button" disabled>현재 ⇥</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="options-col">
+            <label class="field">
+              <span>출력 포맷</span>
+              <select id="audio-format">
+                <option value="mp3" selected>MP3</option>
+                <option value="wav">WAV</option>
+                <option value="ogg">OGG</option>
+                <option value="m4a">M4A (AAC)</option>
+              </select>
+            </label>
+            <label class="field" id="audio-bitrate-field">
+              <span>비트레이트</span>
+              <select id="audio-bitrate">
+                <option value="320">320 kbps</option>
+                <option value="256">256 kbps</option>
+                <option value="192" selected>192 kbps</option>
+                <option value="128">128 kbps</option>
+                <option value="96">96 kbps</option>
+              </select>
+            </label>
+            <p class="opt-note" id="audio-format-note"></p>
+
+            <button class="btn-primary" id="audio-convert" type="button">
+              <span class="btn-label">변환하기</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="progress-block" id="audio-progress" hidden>
+          <div class="progress-row">
+            <span id="audio-progress-label">변환 중…</span>
+            <span id="audio-progress-pct">0%</span>
+          </div>
+          <div class="bar"><div id="audio-progress-bar" class="bar-fill"></div></div>
+          <button class="btn-text danger" id="audio-cancel" type="button">취소</button>
+        </div>
+
+        <div class="result-block" id="audio-result" hidden>
+          <h3 class="result-title">결과</h3>
+          <div class="result-preview" id="audio-result-preview"></div>
+          <div class="result-actions">
+            <a class="btn-primary" id="audio-download" download>다운로드</a>
+            <span class="result-size" id="audio-result-size"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>브라우저에서 <a href="https://github.com/ffmpegwasm/ffmpeg.wasm" target="_blank" rel="noopener">ffmpeg.wasm</a>으로 처리 · 파일은 어디에도 업로드되지 않습니다.</p>
+      <p>Made by <a href="https://github.com/hanariago" target="_blank" rel="noopener">Lena</a> · MIT License</p>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
