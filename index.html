@@ -3,9 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- Primary SEO -->
+  <title>미디어 변환기 - 비디오 GIF 변환 · 오디오 변환 · GIF 편집</title>
+  <meta name="description" content="브라우저에서 바로 쓰는 무료 미디어 변환기. 비디오를 GIF로 변환·트리밍, 오디오 mp3/wav/ogg/m4a 변환·자르기, GIF 프레임 추출·속도 조절. 설치·로그인·서버 전송 없이 ffmpeg.wasm으로 처리." />
+  <meta name="keywords" content="비디오 gif 변환, 영상 gif 만들기, gif 변환, 동영상 자르기, mp4 트리밍, 오디오 변환, mp3 변환, wav 변환, ogg m4a 변환, 오디오 자르기, gif 프레임 추출, gif 속도 조절, video to gif, audio converter, gif editor, ffmpeg wasm, 무료 온라인" />
+  <meta name="author" content="Lena" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#3D6B5E" />
-  <title>미디어 변환기 · 비디오→GIF · 오디오 변환</title>
-  <meta name="description" content="비디오를 GIF로, 오디오 포맷을 변환하고 자르는 도구. 브라우저에서 ffmpeg.wasm으로 처리하며 서버 전송이 없습니다." />
+  <link rel="canonical" href="https://hanariago.github.io/tool-media-converter/" />
+
+  <!-- hreflang -->
+  <link rel="alternate" hreflang="ko" href="https://hanariago.github.io/tool-media-converter/?lang=ko" />
+  <link rel="alternate" hreflang="en" href="https://hanariago.github.io/tool-media-converter/?lang=en" />
+  <link rel="alternate" hreflang="x-default" href="https://hanariago.github.io/tool-media-converter/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="미디어 변환기 - 비디오 GIF 변환 · 오디오 변환 · GIF 편집" />
+  <meta property="og:description" content="비디오→GIF, 오디오 포맷 변환·커팅, GIF 프레임 추출·속도 조절. 브라우저에서 바로, 서버 전송 없이." />
+  <meta property="og:url" content="https://hanariago.github.io/tool-media-converter/" />
+  <meta property="og:site_name" content="미디어 변환기" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:locale:alternate" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="미디어 변환기 - 비디오 GIF 변환 · 오디오 변환 · GIF 편집" />
+  <meta name="twitter:description" content="비디오→GIF, 오디오 변환·커팅, GIF 편집. 브라우저에서 바로, 서버 전송 없이." />
+  <meta name="twitter:creator" content="@thezenvoid" />
+
+  <!-- Favicon (인라인 SVG) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%233D6B5E'/%3E%3Cpolygon points='40,34 40,66 66,50' fill='white'/%3E%3C/svg%3E" />
+
+  <!-- 구조화 데이터: 도구 정의 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "미디어 변환기 (Media Converter)",
+    "alternateName": ["미디어 변환기", "Media Converter", "비디오 GIF 변환", "Video to GIF"],
+    "url": "https://hanariago.github.io/tool-media-converter/",
+    "description": "비디오를 GIF로 변환·트리밍하고, 오디오 포맷(mp3/wav/ogg/m4a)을 변환·커팅하며, 기존 GIF의 프레임을 추출하거나 속도를 바꿔 재조합하는 무료 온라인 도구. 모든 처리는 브라우저에서 ffmpeg.wasm으로 이루어지며 서버로 전송되지 않습니다.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Any (web browser)",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": ["ko", "en"],
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "비디오 → GIF 변환 (구간·해상도·프레임레이트·품질)",
+      "비디오 구간 MP4 트리밍",
+      "오디오 변환 (mp3/wav/ogg/m4a)",
+      "오디오 구간 커팅",
+      "비디오에서 오디오 추출",
+      "GIF 프레임 추출 (PNG)",
+      "GIF 재생 속도 조절·재조합"
+    ],
+    "author": { "@type": "Person", "name": "Lena", "url": "https://x.com/thezenvoid" },
+    "license": "https://opensource.org/licenses/MIT"
+  }
+  </script>
+
+  <!-- 구조화 데이터: FAQ (페이지에 보이는 FAQ와 동일) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "파일이 서버로 업로드되나요?", "acceptedAnswer": { "@type": "Answer", "text": "아니요. 모든 변환은 ffmpeg.wasm으로 브라우저 안에서만 처리됩니다. 업로드한 파일이나 결과물은 어떤 서버로도 전송·저장되지 않습니다." } },
+      { "@type": "Question", "name": "처음에 뭔가 오래 받는데 정상인가요?", "acceptedAnswer": { "@type": "Answer", "text": "네. 첫 변환 때 변환 엔진(ffmpeg.wasm 코어, 약 25~31MB)을 한 번 내려받습니다. 이후에는 캐시되어 빨라집니다. 진행률이 상단에 표시돼요." } },
+      { "@type": "Question", "name": "어떤 비디오 형식을 GIF로 만들 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "mp4·mov·webm·mkv·avi 등 대부분의 영상 형식을 지원합니다. 구간을 정하고 해상도·프레임레이트·품질을 골라 변환하세요. 같은 구간을 MP4로 트리밍할 수도 있습니다." } },
+      { "@type": "Question", "name": "어떤 오디오 포맷끼리 변환되나요?", "acceptedAnswer": { "@type": "Answer", "text": "mp3·wav·ogg·m4a 사이를 자유롭게 변환합니다. 비트레이트를 고를 수 있고, 시작·끝을 지정해 구간만 잘라낼 수도 있습니다. 비디오 파일을 올리면 오디오만 추출됩니다." } },
+      { "@type": "Question", "name": "GIF 편집으로 뭘 할 수 있나요?", "acceptedAnswer": { "@type": "Answer", "text": "기존 GIF를 프레임 단위로 분해해 필름스트립으로 보여주고, 원하는 프레임만 PNG로 추출하거나, 재생 속도(0.5×~4×)를 바꿔 새 GIF로 재조합할 수 있습니다." } },
+      { "@type": "Question", "name": "무료인가요? 설치가 필요한가요?", "acceptedAnswer": { "@type": "Answer", "text": "완전 무료이며 로그인·설치가 필요 없습니다. 브라우저에서 바로 사용하세요." } }
+    ]
+  }
+  </script>
 
   <!-- COOP/COEP 헤더 우회 (GitHub Pages에서 SharedArrayBuffer 활성화). 모듈 스크립트보다 먼저 실행되어야 함. -->
   <script src="coi-serviceworker.min.js"></script>
@@ -16,20 +90,24 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main">본문 바로가기</a>
+  <a class="skip-link" href="#main" data-i18n="skipLink">본문 바로가기</a>
 
   <header class="site-header">
     <div class="wrap header-inner">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">◐</span>
         <div class="brand-text">
-          <h1>미디어 변환기</h1>
-          <p>비디오 → GIF · 오디오 변환 / 커팅</p>
+          <h1 data-i18n="brandTitle">미디어 변환기</h1>
+          <p data-i18n="brandSub">비디오 → GIF · 오디오 변환 / 커팅 · GIF 편집</p>
         </div>
       </div>
-      <p class="privacy-badge" title="모든 처리는 브라우저 안에서 이루어집니다.">
-        <span aria-hidden="true">🔒</span> 서버 전송 없음
-      </p>
+      <div class="header-right">
+        <p class="privacy-badge"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">서버 전송 없음</span></p>
+        <select id="lang-select" class="lang-select" aria-label="Language">
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -50,13 +128,13 @@
 
   <nav class="tabs wrap" role="tablist" aria-label="도구 선택">
     <button class="tab-btn is-active" role="tab" id="tab-btn-video" aria-controls="panel-video" aria-selected="true">
-      <span class="tab-emoji" aria-hidden="true">🎬</span> 비디오 → GIF / 트리머
+      <span class="tab-emoji" aria-hidden="true">🎬</span> <span data-i18n="tabVideo">비디오 → GIF / 트리머</span>
     </button>
     <button class="tab-btn" role="tab" id="tab-btn-audio" aria-controls="panel-audio" aria-selected="false" tabindex="-1">
-      <span class="tab-emoji" aria-hidden="true">🎵</span> 오디오 변환 / 커터
+      <span class="tab-emoji" aria-hidden="true">🎵</span> <span data-i18n="tabAudio">오디오 변환 / 커터</span>
     </button>
     <button class="tab-btn" role="tab" id="tab-btn-gif" aria-controls="panel-gif" aria-selected="false" tabindex="-1">
-      <span class="tab-emoji" aria-hidden="true">🖼️</span> GIF 편집
+      <span class="tab-emoji" aria-hidden="true">🖼️</span> <span data-i18n="tabGif">GIF 편집</span>
     </button>
   </nav>
 
@@ -65,19 +143,17 @@
     <!-- ===================== 탭 1: 비디오 → GIF / 트리머 ===================== -->
     <section id="panel-video" class="panel is-active" role="tabpanel" aria-labelledby="tab-btn-video">
 
-      <!-- 업로드 전: 드래그앤드롭 -->
       <div class="dropzone" id="video-dropzone" tabindex="0" role="button" aria-label="비디오 파일 업로드">
         <input type="file" id="video-input" accept="video/*" hidden />
         <div class="dropzone-icon" aria-hidden="true">🎬</div>
-        <p class="dropzone-title">비디오 파일을 끌어다 놓거나 클릭해서 선택</p>
-        <p class="dropzone-sub">mp4 · mov · webm · mkv · avi 등</p>
+        <p class="dropzone-title" data-i18n="vidDropTitle">비디오 파일을 끌어다 놓거나 클릭해서 선택</p>
+        <p class="dropzone-sub" data-i18n="vidDropSub">mp4 · mov · webm · mkv · avi 등</p>
       </div>
 
-      <!-- 업로드 후: 편집 영역 -->
       <div class="editor" id="video-editor" hidden>
         <div class="editor-head">
           <div class="file-meta" id="video-file-meta"></div>
-          <button class="btn-text" id="video-reset" type="button">다른 파일 선택</button>
+          <button class="btn-text" id="video-reset" type="button" data-i18n="reChoose">다른 파일 선택</button>
         </div>
 
         <div class="editor-grid">
@@ -85,31 +161,30 @@
             <video id="video-preview" class="media-preview" controls playsinline></video>
             <div class="trim-block">
               <div class="trim-head">
-                <span>구간 선택</span>
+                <span data-i18n="rangeSelect">구간 선택</span>
                 <span class="trim-readout" id="video-trim-readout">0:00 – 0:00</span>
               </div>
               <div class="range-slider" id="video-range"></div>
               <div class="time-inputs">
-                <label>시작 <input type="text" id="video-start" class="time-input" inputmode="decimal" value="0:00" /></label>
-                <label>끝 <input type="text" id="video-end" class="time-input" inputmode="decimal" value="0:00" /></label>
-                <button class="btn-mini" id="video-set-start" type="button" title="현재 재생 위치를 시작으로">⇤ 현재</button>
-                <button class="btn-mini" id="video-set-end" type="button" title="현재 재생 위치를 끝으로">현재 ⇥</button>
+                <label><span data-i18n="start">시작</span> <input type="text" id="video-start" class="time-input" inputmode="decimal" value="0:00" /></label>
+                <label><span data-i18n="end">끝</span> <input type="text" id="video-end" class="time-input" inputmode="decimal" value="0:00" /></label>
+                <button class="btn-mini" id="video-set-start" type="button" data-i18n="nowStart">⇤ 현재</button>
+                <button class="btn-mini" id="video-set-end" type="button" data-i18n="nowEnd">현재 ⇥</button>
               </div>
             </div>
           </div>
 
           <div class="options-col">
             <div class="mode-switch" role="radiogroup" aria-label="출력 형식">
-              <button class="mode-opt is-active" id="mode-gif" role="radio" aria-checked="true" type="button">GIF로 변환</button>
-              <button class="mode-opt" id="mode-mp4" role="radio" aria-checked="false" type="button">MP4로 트리밍</button>
+              <button class="mode-opt is-active" id="mode-gif" role="radio" aria-checked="true" type="button" data-i18n="modeGif">GIF로 변환</button>
+              <button class="mode-opt" id="mode-mp4" role="radio" aria-checked="false" type="button" data-i18n="modeMp4">MP4로 트리밍</button>
             </div>
 
-            <!-- GIF 옵션 -->
             <div class="opt-group" id="gif-options">
               <label class="field">
-                <span>가로 해상도</span>
+                <span data-i18n="gifWidth">가로 해상도</span>
                 <select id="gif-width">
-                  <option value="0">원본 유지</option>
+                  <option value="0" data-i18n="optOriginal">원본 유지</option>
                   <option value="640">640 px</option>
                   <option value="480" selected>480 px</option>
                   <option value="320">320 px</option>
@@ -117,7 +192,7 @@
                 </select>
               </label>
               <label class="field">
-                <span>프레임레이트</span>
+                <span data-i18n="gifFps">프레임레이트</span>
                 <select id="gif-fps">
                   <option value="10">10 fps</option>
                   <option value="15" selected>15 fps</option>
@@ -126,50 +201,47 @@
                 </select>
               </label>
               <label class="field">
-                <span>품질</span>
+                <span data-i18n="gifQuality">품질</span>
                 <select id="gif-quality">
-                  <option value="high">높음 (256색, 선명)</option>
-                  <option value="medium" selected>보통 (128색)</option>
-                  <option value="low">낮음 (64색, 가벼움)</option>
+                  <option value="high" data-i18n="qHigh">높음 (256색, 선명)</option>
+                  <option value="medium" selected data-i18n="qMid">보통 (128색)</option>
+                  <option value="low" data-i18n="qLow">낮음 (64색, 가벼움)</option>
                 </select>
               </label>
             </div>
 
-            <!-- MP4 옵션 -->
             <div class="opt-group" id="mp4-options" hidden>
-              <p class="opt-note">선택한 구간을 MP4로 다시 인코딩합니다. 프레임 단위로 정확하게 잘려요. 긴 구간은 시간이 걸릴 수 있습니다.</p>
+              <p class="opt-note" data-i18n="mp4Note">선택한 구간을 MP4로 다시 인코딩합니다. 프레임 단위로 정확하게 잘려요. 긴 구간은 시간이 걸릴 수 있습니다.</p>
               <label class="field">
-                <span>화질</span>
+                <span data-i18n="mp4Quality">화질</span>
                 <select id="mp4-quality">
-                  <option value="18">높음</option>
-                  <option value="23" selected>보통</option>
-                  <option value="28">낮음 (가벼움)</option>
+                  <option value="18" data-i18n="mqHigh">높음</option>
+                  <option value="23" selected data-i18n="mqMid">보통</option>
+                  <option value="28" data-i18n="mqLow">낮음 (가벼움)</option>
                 </select>
               </label>
             </div>
 
             <button class="btn-primary" id="video-convert" type="button">
-              <span class="btn-label">GIF 만들기</span>
+              <span class="btn-label" data-i18n="btnGif">GIF 만들기</span>
             </button>
           </div>
         </div>
 
-        <!-- 진행률 -->
         <div class="progress-block" id="video-progress" hidden>
           <div class="progress-row">
             <span id="video-progress-label">변환 중…</span>
             <span id="video-progress-pct">0%</span>
           </div>
           <div class="bar"><div id="video-progress-bar" class="bar-fill"></div></div>
-          <button class="btn-text danger" id="video-cancel" type="button">취소</button>
+          <button class="btn-text danger" id="video-cancel" type="button" data-i18n="cancel">취소</button>
         </div>
 
-        <!-- 결과 -->
         <div class="result-block" id="video-result" hidden>
-          <h3 class="result-title">결과</h3>
+          <h3 class="result-title" data-i18n="result">결과</h3>
           <div class="result-preview" id="video-result-preview"></div>
           <div class="result-actions">
-            <a class="btn-primary" id="video-download" download>다운로드</a>
+            <a class="btn-primary" id="video-download" download data-i18n="download">다운로드</a>
             <span class="result-size" id="video-result-size"></span>
           </div>
         </div>
@@ -182,14 +254,14 @@
       <div class="dropzone" id="audio-dropzone" tabindex="0" role="button" aria-label="오디오 또는 비디오 파일 업로드">
         <input type="file" id="audio-input" accept="audio/*,video/*" hidden />
         <div class="dropzone-icon" aria-hidden="true">🎵</div>
-        <p class="dropzone-title">오디오 파일을 끌어다 놓거나 클릭해서 선택</p>
-        <p class="dropzone-sub">mp3 · wav · m4a · ogg · flac · 또는 비디오에서 오디오 추출</p>
+        <p class="dropzone-title" data-i18n="audDropTitle">오디오 파일을 끌어다 놓거나 클릭해서 선택</p>
+        <p class="dropzone-sub" data-i18n="audDropSub">mp3 · wav · m4a · ogg · flac · 또는 비디오에서 오디오 추출</p>
       </div>
 
       <div class="editor" id="audio-editor" hidden>
         <div class="editor-head">
           <div class="file-meta" id="audio-file-meta"></div>
-          <button class="btn-text" id="audio-reset" type="button">다른 파일 선택</button>
+          <button class="btn-text" id="audio-reset" type="button" data-i18n="reChoose">다른 파일 선택</button>
         </div>
 
         <div class="editor-grid">
@@ -201,23 +273,23 @@
             <div class="trim-block">
               <div class="trim-head">
                 <label class="check-inline">
-                  <input type="checkbox" id="audio-cut-enable" /> 구간 커팅
+                  <input type="checkbox" id="audio-cut-enable" /> <span data-i18n="cutEnable">구간 커팅</span>
                 </label>
                 <span class="trim-readout" id="audio-trim-readout">0:00 – 0:00</span>
               </div>
               <div class="range-slider is-disabled" id="audio-range"></div>
               <div class="time-inputs">
-                <label>시작 <input type="text" id="audio-start" class="time-input" inputmode="decimal" value="0:00" disabled /></label>
-                <label>끝 <input type="text" id="audio-end" class="time-input" inputmode="decimal" value="0:00" disabled /></label>
-                <button class="btn-mini" id="audio-set-start" type="button" disabled>⇤ 현재</button>
-                <button class="btn-mini" id="audio-set-end" type="button" disabled>현재 ⇥</button>
+                <label><span data-i18n="start">시작</span> <input type="text" id="audio-start" class="time-input" inputmode="decimal" value="0:00" disabled /></label>
+                <label><span data-i18n="end">끝</span> <input type="text" id="audio-end" class="time-input" inputmode="decimal" value="0:00" disabled /></label>
+                <button class="btn-mini" id="audio-set-start" type="button" disabled data-i18n="nowStart">⇤ 현재</button>
+                <button class="btn-mini" id="audio-set-end" type="button" disabled data-i18n="nowEnd">현재 ⇥</button>
               </div>
             </div>
           </div>
 
           <div class="options-col">
             <label class="field">
-              <span>출력 포맷</span>
+              <span data-i18n="outFormat">출력 포맷</span>
               <select id="audio-format">
                 <option value="mp3" selected>MP3</option>
                 <option value="wav">WAV</option>
@@ -226,7 +298,7 @@
               </select>
             </label>
             <label class="field" id="audio-bitrate-field">
-              <span>비트레이트</span>
+              <span data-i18n="bitrate">비트레이트</span>
               <select id="audio-bitrate">
                 <option value="320">320 kbps</option>
                 <option value="256">256 kbps</option>
@@ -238,7 +310,7 @@
             <p class="opt-note" id="audio-format-note"></p>
 
             <button class="btn-primary" id="audio-convert" type="button">
-              <span class="btn-label">변환하기</span>
+              <span class="btn-label" data-i18n="btnConvert">변환하기</span>
             </button>
           </div>
         </div>
@@ -249,62 +321,59 @@
             <span id="audio-progress-pct">0%</span>
           </div>
           <div class="bar"><div id="audio-progress-bar" class="bar-fill"></div></div>
-          <button class="btn-text danger" id="audio-cancel" type="button">취소</button>
+          <button class="btn-text danger" id="audio-cancel" type="button" data-i18n="cancel">취소</button>
         </div>
 
         <div class="result-block" id="audio-result" hidden>
-          <h3 class="result-title">결과</h3>
+          <h3 class="result-title" data-i18n="result">결과</h3>
           <div class="result-preview" id="audio-result-preview"></div>
           <div class="result-actions">
-            <a class="btn-primary" id="audio-download" download>다운로드</a>
+            <a class="btn-primary" id="audio-download" download data-i18n="download">다운로드</a>
             <span class="result-size" id="audio-result-size"></span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================== 탭 3: GIF 편집 (프레임 추출 / 속도 조절) ===================== -->
+    <!-- ===================== 탭 3: GIF 편집 ===================== -->
     <section id="panel-gif" class="panel" role="tabpanel" aria-labelledby="tab-btn-gif" hidden>
 
       <div class="dropzone" id="gif-dropzone" tabindex="0" role="button" aria-label="GIF 파일 업로드">
         <input type="file" id="gif-input" accept="image/gif" hidden />
         <div class="dropzone-icon" aria-hidden="true">🖼️</div>
-        <p class="dropzone-title">GIF 파일을 끌어다 놓거나 클릭해서 선택</p>
-        <p class="dropzone-sub">기존 GIF를 프레임으로 분해 · 추출 · 속도 조절</p>
+        <p class="dropzone-title" data-i18n="gifDropTitle">GIF 파일을 끌어다 놓거나 클릭해서 선택</p>
+        <p class="dropzone-sub" data-i18n="gifDropSub">기존 GIF를 프레임으로 분해 · 추출 · 속도 조절</p>
       </div>
 
       <div class="editor" id="gif-editor" hidden>
         <div class="editor-head">
           <div class="file-meta" id="gif-file-meta"></div>
-          <button class="btn-text" id="gif-reset" type="button">다른 파일 선택</button>
+          <button class="btn-text" id="gif-reset" type="button" data-i18n="reChoose">다른 파일 선택</button>
         </div>
 
-        <!-- 미리보기 + 필름스트립 -->
         <div class="gif-preview-row">
           <img id="gif-preview" class="media-preview gif-preview" alt="GIF 미리보기" />
           <div class="gif-stat" id="gif-stat"></div>
         </div>
 
         <div class="filmstrip-head">
-          <span>프레임 <span id="gif-frame-count">0</span>개</span>
+          <span><span data-i18n="framesLabelPre">프레임</span> <span id="gif-frame-count">0</span><span data-i18n="framesLabelPost">개</span></span>
           <div class="filmstrip-actions">
-            <button class="btn-mini" id="gif-select-all" type="button">전체 선택</button>
-            <button class="btn-mini" id="gif-select-none" type="button">선택 해제</button>
+            <button class="btn-mini" id="gif-select-all" type="button" data-i18n="selectAll">전체 선택</button>
+            <button class="btn-mini" id="gif-select-none" type="button" data-i18n="selectNone">선택 해제</button>
           </div>
         </div>
         <div class="filmstrip" id="gif-filmstrip" role="group" aria-label="프레임 목록"></div>
 
         <div class="gif-options-grid">
-          <!-- 프레임 추출 -->
           <div class="gif-card">
-            <h3 class="gif-card-title">선택 프레임 추출</h3>
-            <p class="opt-note"><span id="gif-selected-count">0</span>개 프레임 선택됨. PNG로 내려받습니다.</p>
-            <button class="btn-primary" id="gif-extract" type="button">선택 프레임 PNG 다운로드</button>
+            <h3 class="gif-card-title" data-i18n="extractTitle">선택 프레임 추출</h3>
+            <p class="opt-note"><span id="gif-selected-count">0</span><span data-i18n="extractNotePost">개 프레임 선택됨. PNG로 내려받습니다.</span></p>
+            <button class="btn-primary" id="gif-extract" type="button" data-i18n="extractBtn">선택 프레임 PNG 다운로드</button>
           </div>
 
-          <!-- 속도 조절 + 재조합 -->
           <div class="gif-card">
-            <h3 class="gif-card-title">재생 속도 조절</h3>
+            <h3 class="gif-card-title" data-i18n="speedTitle">재생 속도 조절</h3>
             <div class="speed-presets" id="gif-speed-presets">
               <button class="btn-mini" data-speed="0.5" type="button">0.5×</button>
               <button class="btn-mini is-active" data-speed="1" type="button">1×</button>
@@ -312,14 +381,14 @@
               <button class="btn-mini" data-speed="2" type="button">2×</button>
             </div>
             <div class="speed-control">
-              <input type="range" id="gif-speed-range" min="0.25" max="4" step="0.05" value="1" />
+              <input type="range" id="gif-speed-range" min="0.25" max="4" step="0.05" value="1" aria-label="재생 속도" />
               <div class="speed-num">
                 <input type="number" id="gif-speed-num" min="0.25" max="4" step="0.05" value="1" />
                 <span>×</span>
               </div>
             </div>
-            <p class="opt-note" id="gif-speed-note">원본 속도 그대로. 선택한 프레임만으로 재조합하려면 위에서 프레임을 고르세요(전체 선택 시 모든 프레임 사용).</p>
-            <button class="btn-primary" id="gif-rebuild" type="button">새 GIF 만들기</button>
+            <p class="opt-note" id="gif-speed-note" data-i18n="speedNoteInit">원본 속도 그대로. 선택한 프레임만으로 재조합하려면 위에서 프레임을 고르세요(전체 선택 시 모든 프레임 사용).</p>
+            <button class="btn-primary" id="gif-rebuild" type="button" data-i18n="rebuildBtn">새 GIF 만들기</button>
           </div>
         </div>
 
@@ -332,13 +401,22 @@
         </div>
 
         <div class="result-block" id="gif-result" hidden>
-          <h3 class="result-title">결과</h3>
+          <h3 class="result-title" data-i18n="result">결과</h3>
           <div class="result-preview" id="gif-result-preview"></div>
           <div class="result-actions">
-            <a class="btn-primary" id="gif-download" download>다운로드</a>
+            <a class="btn-primary" id="gif-download" download data-i18n="download">다운로드</a>
             <span class="result-size" id="gif-result-size"></span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- 실사용 콘텐츠 (SEO/AEO) -->
+    <section class="content">
+      <p class="intro" id="intro-text"></p>
+      <div class="faq">
+        <h2 id="faq-title" data-i18n="faqTitle">자주 묻는 질문</h2>
+        <div id="faq-list"></div>
       </div>
     </section>
 
@@ -346,8 +424,13 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>브라우저에서 <a href="https://github.com/ffmpegwasm/ffmpeg.wasm" target="_blank" rel="noopener">ffmpeg.wasm</a>으로 처리 · 파일은 어디에도 업로드되지 않습니다.</p>
-      <p>Made by <a href="https://github.com/hanariago" target="_blank" rel="noopener">Lena</a> · MIT License</p>
+      <p data-i18n="footer">브라우저에서 ffmpeg.wasm으로 처리 · 파일은 어디에도 업로드되지 않습니다.</p>
+      <p>
+        <span data-i18n="license">오픈소스 · MIT 라이선스</span> ·
+        <a href="https://github.com/hanariago/tool-media-converter" target="_blank" rel="noopener">GitHub</a> ·
+        <span data-i18n="footerMadeBy">Made by</span> <a href="https://x.com/thezenvoid" target="_blank" rel="noopener">Lena</a>
+      </p>
+      <p><a href="https://hanariago.github.io/tools-hub/" target="_blank" rel="noopener" data-i18n="hubLink">🔧 다른 도구 모음 →</a></p>
     </div>
   </footer>
 
@@ -355,19 +438,19 @@
   <div id="guide-overlay" class="guide-overlay" hidden>
     <div class="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title">
       <button class="guide-x" id="guide-x" type="button" aria-label="닫기">×</button>
-      <h2 class="guide-title" id="guide-title">미디어 변환기에 오신 걸 환영해요 👋</h2>
-      <p class="guide-lead">모든 처리는 <strong>브라우저 안에서</strong> 이루어져요. 파일은 어디에도 업로드되지 않습니다.</p>
+      <h2 class="guide-title" id="guide-title" data-i18n="guideTitle">미디어 변환기에 오신 걸 환영해요 👋</h2>
+      <p class="guide-lead" data-i18n-html="guideLeadHtml">모든 처리는 <strong>브라우저 안에서</strong> 이루어져요. 파일은 어디에도 업로드되지 않습니다.</p>
       <ul class="guide-list">
-        <li><span aria-hidden="true">🎬</span> <strong>비디오 → GIF / 트리머</strong> — 영상의 원하는 구간을 GIF로 만들거나 MP4로 잘라요.</li>
-        <li><span aria-hidden="true">🎵</span> <strong>오디오 변환 / 커터</strong> — mp3·wav·ogg·m4a 변환, 구간 자르기, 영상에서 오디오 추출.</li>
-        <li><span aria-hidden="true">🖼️</span> <strong>GIF 편집</strong> — 기존 GIF를 프레임으로 분해해 PNG로 추출하거나, 속도를 바꿔 새 GIF로 재조합.</li>
+        <li><span aria-hidden="true">🎬</span> <span data-i18n-html="guideLi1Html"><strong>비디오 → GIF / 트리머</strong> — 영상의 원하는 구간을 GIF로 만들거나 MP4로 잘라요.</span></li>
+        <li><span aria-hidden="true">🎵</span> <span data-i18n-html="guideLi2Html"><strong>오디오 변환 / 커터</strong> — mp3·wav·ogg·m4a 변환, 구간 자르기, 영상에서 오디오 추출.</span></li>
+        <li><span aria-hidden="true">🖼️</span> <span data-i18n-html="guideLi3Html"><strong>GIF 편집</strong> — 기존 GIF를 프레임으로 분해해 PNG로 추출하거나, 속도를 바꿔 새 GIF로 재조합.</span></li>
       </ul>
-      <p class="guide-hint">처음 변환할 때 변환 엔진(약 25–31MB)을 한 번 내려받아요. 잠깐 기다리면 이후엔 빨라요.</p>
+      <p class="guide-hint" data-i18n="guideHint">처음 변환할 때 변환 엔진(약 25–31MB)을 한 번 내려받아요. 잠깐 기다리면 이후엔 빨라요.</p>
       <div class="guide-footer">
         <label class="guide-dont">
-          <input type="checkbox" id="guide-dont-show" /> 오늘 다시 보지 않기
+          <input type="checkbox" id="guide-dont-show" /> <span data-i18n="guideDont">오늘 다시 보지 않기</span>
         </label>
-        <button class="btn-primary guide-close-btn" id="guide-close" type="button">닫기</button>
+        <button class="btn-primary guide-close-btn" id="guide-close" type="button" data-i18n="guideClose">닫기</button>
       </div>
     </div>
   </div>

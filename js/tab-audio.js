@@ -5,12 +5,13 @@ import {
   $, formatTime, parseTime, formatBytes, toast,
   setupDropzone, createRangeSlider,
 } from "./ui.js";
+import { t } from "./i18n.js";
 
 const FORMAT_INFO = {
-  mp3: { codec: "libmp3lame", ext: "mp3", mime: "audio/mpeg", lossy: true, note: "가장 호환성이 좋은 손실 압축 포맷이에요." },
-  wav: { codec: "pcm_s16le", ext: "wav", mime: "audio/wav", lossy: false, note: "무손실. 파일 크기가 큽니다." },
-  ogg: { codec: "libvorbis", ext: "ogg", mime: "audio/ogg", lossy: true, note: "오픈 포맷. 같은 용량에서 음질이 좋아요." },
-  m4a: { codec: "aac", ext: "m4a", mime: "audio/mp4", lossy: true, note: "Apple 기기 친화적인 AAC 포맷이에요." },
+  mp3: { codec: "libmp3lame", ext: "mp3", mime: "audio/mpeg", lossy: true, noteKey: "noteMp3" },
+  wav: { codec: "pcm_s16le", ext: "wav", mime: "audio/wav", lossy: false, noteKey: "noteWav" },
+  ogg: { codec: "libvorbis", ext: "ogg", mime: "audio/ogg", lossy: true, noteKey: "noteOgg" },
+  m4a: { codec: "aac", ext: "m4a", mime: "audio/mp4", lossy: true, noteKey: "noteM4a" },
 };
 
 export function initAudioTab() {
@@ -66,13 +67,13 @@ export function initAudioTab() {
   function loadFile(file) {
     const ok = file.type.startsWith("audio/") || file.type.startsWith("video/") ||
       /\.(mp3|wav|m4a|ogg|flac|aac|mp4|mov|webm|mkv)$/i.test(file.name);
-    if (!ok) { toast("오디오 또는 비디오 파일을 올려주세요.", true); return; }
+    if (!ok) { toast(t("tWrongAudio"), true); return; }
 
     currentFile = file;
     if (objectURL) URL.revokeObjectURL(objectURL);
     objectURL = URL.createObjectURL(file);
     preview.src = objectURL;
-    const kind = file.type.startsWith("video/") ? " · 영상에서 오디오 추출" : "";
+    const kind = file.type.startsWith("video/") ? t("fromVideo") : "";
     fileMeta.innerHTML = `<strong>${file.name}</strong>${formatBytes(file.size)}${kind}`;
 
     preview.addEventListener("loadedmetadata", () => {
@@ -127,9 +128,10 @@ export function initAudioTab() {
   function refreshFormat() {
     const info = FORMAT_INFO[formatSel.value];
     bitrateField.hidden = !info.lossy;
-    formatNote.textContent = info.note;
+    formatNote.textContent = t(info.noteKey);
   }
   formatSel.addEventListener("change", refreshFormat);
+  document.addEventListener("mediaconv:langchange", refreshFormat);
 
   // ---------- 진행률 ----------
   function showProgress(label) {
@@ -152,7 +154,7 @@ export function initAudioTab() {
   function lockUI(lock) {
     busy = lock;
     convertBtn.disabled = lock;
-    btnLabel.textContent = lock ? "처리 중…" : "변환하기";
+    btnLabel.textContent = lock ? t("btnProcessing") : t("btnConvert");
   }
 
   cancelBtn.addEventListener("click", () => {
@@ -161,7 +163,7 @@ export function initAudioTab() {
     busy = false;
     lockUI(false);
     progressBlock.hidden = true;
-    toast("변환을 취소했어요.");
+    toast(t("tCanceled"));
   });
 
   // ---------- 변환 실행 ----------
@@ -171,14 +173,14 @@ export function initAudioTab() {
     const useCut = cutEnable.checked;
     const { start, end } = slider.getRange();
     const dur = end - start;
-    if (useCut && dur <= 0) { toast("구간을 다시 선택해주세요.", true); return; }
+    if (useCut && dur <= 0) { toast(t("tRangeAgain"), true); return; }
 
     try {
       lockUI(true);
-      showProgress("변환 엔진 준비 중…");
+      showProgress(t("enginePreparing"));
 
       const job = async (ffmpeg) => {
-        showProgress("오디오 변환 중…");
+        showProgress(t("pAudio"));
         const ext = (currentFile.name.split(".").pop() || "dat").toLowerCase();
         const inputName = `in.${ext}`;
         const outName = `out.${info.ext}`;
@@ -203,7 +205,7 @@ export function initAudioTab() {
       showResult(blob, info);
     } catch (err) {
       console.error(err);
-      if (busy) toast(`변환 실패: ${err.message || err}`, true);
+      if (busy) toast(t("tConvertFail", err.message || err), true);
     } finally {
       progressBlock.hidden = true;
       lockUI(false);

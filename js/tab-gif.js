@@ -5,6 +5,7 @@
 import { parseGIF, decompressFrames } from "https://cdn.jsdelivr.net/npm/gifuct-js@2.1.2/+esm";
 import { GIFEncoder, quantize, applyPalette } from "./vendor/gifenc/index.js";
 import { $, formatBytes, toast, setupDropzone } from "./ui.js";
+import { t } from "./i18n.js";
 
 export function initGifTab() {
   const dropzone = $("#gif-dropzone");
@@ -46,7 +47,7 @@ export function initGifTab() {
   // ---------- 파일 로드 ----------
   async function loadFile(file) {
     if (file.type !== "image/gif" && !/\.gif$/i.test(file.name)) {
-      toast("GIF 파일을 올려주세요.", true);
+      toast(t("tWrongGif"), true);
       return;
     }
     fileName = file.name;
@@ -58,27 +59,30 @@ export function initGifTab() {
     dropzone.hidden = true;
     editor.hidden = false;
     resetResult();
-    filmstrip.innerHTML = `<p class="opt-note">프레임을 분해하는 중…</p>`;
+    filmstrip.innerHTML = `<p class="opt-note">${t("gifDecoding")}</p>`;
 
     try {
       const buf = await file.arrayBuffer();
       const gif = parseGIF(buf);
       const raw = decompressFrames(gif, true);
-      if (!raw.length) throw new Error("프레임을 찾지 못했어요.");
+      if (!raw.length) throw new Error(t("tNoFrames"));
       fullW = gif.lsd.width;
       fullH = gif.lsd.height;
       compositeFrames(raw);
       renderFilmstrip();
-      const totalMs = frames.reduce((a, f) => a + f.delay, 0);
-      statEl.innerHTML =
-        `<strong>${fullW}×${fullH}</strong> px<br>${frames.length} 프레임<br>총 ${(totalMs / 1000).toFixed(2)}초` +
-        (hasAlpha ? "<br>투명도 있음" : "");
+      refreshStat();
       updateSpeedNote();
     } catch (err) {
       console.error(err);
-      toast(`GIF를 읽지 못했어요: ${err.message || err}`, true);
-      filmstrip.innerHTML = `<p class="opt-note">디코딩 실패.</p>`;
+      toast(t("tGifReadFail", err.message || err), true);
+      filmstrip.innerHTML = `<p class="opt-note">${t("gifDecodeFail")}</p>`;
     }
+  }
+
+  function refreshStat() {
+    if (!frames.length) return;
+    const totalMs = frames.reduce((a, f) => a + f.delay, 0);
+    statEl.innerHTML = t("gifStat", fullW, fullH, frames.length, (totalMs / 1000).toFixed(2), hasAlpha);
   }
 
   // 패치(부분 프레임)들을 디스포절 규칙에 따라 전체 프레임으로 합성
@@ -198,12 +202,11 @@ export function initGifTab() {
     updateSpeedNote();
   }
   function updateSpeedNote() {
+    if (!frames.length) { speedNote.textContent = t("speedNoteInit"); return; }
     const sel = frames.filter((f) => f.selected);
     const useFrames = sel.length ? sel : frames;
     const totalMs = useFrames.reduce((a, f) => a + Math.max(20, f.delay / speed), 0);
-    speedNote.textContent = frames.length
-      ? `${speed}×속 · ${useFrames.length}프레임 · 약 ${(totalMs / 1000).toFixed(2)}초짜리 GIF로 재조합돼요.`
-      : "원본 속도 그대로.";
+    speedNote.textContent = t("speedNote", speed, useFrames.length, (totalMs / 1000).toFixed(2));
   }
   speedRange.addEventListener("input", () => setSpeed(speedRange.value));
   speedNum.addEventListener("input", () => setSpeed(speedNum.value));
@@ -242,7 +245,7 @@ export function initGifTab() {
   extractBtn.addEventListener("click", async () => {
     if (busy || !frames.length) return;
     const selected = frames.map((f, i) => ({ f, i })).filter((x) => x.f.selected);
-    if (!selected.length) { toast("추출할 프레임을 선택해주세요.", true); return; }
+    if (!selected.length) { toast(t("tPickFrames"), true); return; }
 
     lockUI(true);
     try {
@@ -263,10 +266,10 @@ export function initGifTab() {
         setTimeout(() => URL.revokeObjectURL(a.href), 4000);
         await new Promise((r) => setTimeout(r, 250)); // 연속 다운로드 차단 방지
       }
-      toast(`${selected.length}개 프레임을 PNG로 내려받았어요.`);
+      toast(t("tExtracted", selected.length));
     } catch (err) {
       console.error(err);
-      toast(`추출 실패: ${err.message || err}`, true);
+      toast(t("tExtractFail", err.message || err), true);
     } finally {
       lockUI(false);
     }
@@ -277,10 +280,10 @@ export function initGifTab() {
     if (busy || !frames.length) return;
     const sel = frames.filter((f) => f.selected);
     const useFrames = sel.length ? sel : frames;
-    if (!useFrames.length) { toast("프레임이 없어요.", true); return; }
+    if (!useFrames.length) { toast(t("tNoFramesShort"), true); return; }
 
     lockUI(true);
-    showProgress("새 GIF 만드는 중…");
+    showProgress(t("pGifBuild"));
     try {
       const enc = GIFEncoder();
       const fmt = hasAlpha ? "rgba4444" : "rgb565";
@@ -305,6 +308,9 @@ export function initGifTab() {
       lockUI(false);
     }
   });
+
+  // 언어 변경 시 동적 텍스트(통계·속도 노트) 갱신
+  document.addEventListener("mediaconv:langchange", () => { refreshStat(); updateSpeedNote(); });
 
   function showResult(blob) {
     resultURL = URL.createObjectURL(blob);

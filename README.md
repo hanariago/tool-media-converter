@@ -13,6 +13,7 @@
 - **비디오에서 오디오 추출** — 영상 파일을 올려 오디오만 변환
 - **GIF 편집** — 기존 GIF를 프레임 단위로 분해(필름스트립) → 원하는 프레임만 PNG로 추출 / 재생 속도 조절 후 새 GIF로 재조합
 - **첫 방문 가이드** — 처음 열면 사용법 안내 팝업 (오늘 다시 보지 않기 지원)
+- **한/영 다국어** — 언어 토글 + 브라우저 언어 자동감지 + `?lang=` 파라미터
 - **서버 전송 없음** — 모든 처리는 브라우저 안에서. 파일은 어디에도 업로드되지 않습니다.
 
 ## 사용법
@@ -48,6 +49,16 @@ python3 -m http.server 8000
 
 최신 Chrome / Edge / Firefox 권장. Safari 등 일부 환경에서는 단일스레드 모드로 동작합니다.
 
+## 사용한 오픈소스 / 에셋
+
+- [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) — 래퍼(`@ffmpeg/ffmpeg`·`@ffmpeg/util`) MIT. 코어(`@ffmpeg/core-mt`)는 `--enable-gpl`(libx264 등 포함) 빌드라 **GPL**. 코어는 번들하지 않고 런타임에 CDN에서 로드합니다. ([라이선스](https://github.com/ffmpegwasm/ffmpeg.wasm/blob/main/LICENSE))
+- [gifuct-js](https://github.com/matt-way/gifuct) — GIF 디코딩 · MIT (런타임 CDN 로드)
+- [gifenc](https://github.com/mattdesl/gifenc) — GIF 인코딩 · MIT (`js/vendor/`에 포함)
+- [coi-serviceworker](https://github.com/gzuidhof/coi-serviceworker) — COOP/COEP 우회 · MIT (포함)
+- [Noto Sans KR](https://fonts.google.com/noto/specimen/Noto+Sans+KR) — 폰트 · SIL Open Font License 1.1 (Google Fonts CDN)
+
+자체 작성 코드는 MIT(아래 [LICENSE](LICENSE)). 외부 리소스는 각 라이선스를 따릅니다.
+
 ---
 
-Made by [Lena](https://github.com/hanariago) · License: MIT
+Made by [Lena](https://x.com/thezenvoid) · 자체 코드 License: MIT (외부 리소스는 위 라이선스 고지 참조)

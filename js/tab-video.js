@@ -5,6 +5,7 @@ import {
   $, formatTime, parseTime, formatBytes, toast,
   setupDropzone, triggerDownload, createRangeSlider,
 } from "./ui.js";
+import { t } from "./i18n.js";
 
 export function initVideoTab() {
   const dropzone = $("#video-dropzone");
@@ -53,7 +54,7 @@ export function initVideoTab() {
   // ---------- 파일 로드 ----------
   function loadFile(file) {
     if (!file.type.startsWith("video/") && !/\.(mp4|mov|webm|mkv|avi|m4v)$/i.test(file.name)) {
-      toast("비디오 파일을 올려주세요.", true);
+      toast(t("tWrongVideo"), true);
       return;
     }
     currentFile = file;
@@ -117,10 +118,11 @@ export function initVideoTab() {
     modeMp4.setAttribute("aria-checked", String(!isGif));
     gifOptions.hidden = !isGif;
     mp4Options.hidden = isGif;
-    btnLabel.textContent = isGif ? "GIF 만들기" : "MP4로 트리밍";
+    btnLabel.textContent = isGif ? t("btnGif") : t("btnMp4");
   }
   modeGif.addEventListener("click", () => setMode("gif"));
   modeMp4.addEventListener("click", () => setMode("mp4"));
+  document.addEventListener("mediaconv:langchange", () => { if (!busy) setMode(mode); });
 
   // ---------- 진행률 ----------
   function showProgress(label) {
@@ -143,7 +145,7 @@ export function initVideoTab() {
   function lockUI(lock) {
     busy = lock;
     convertBtn.disabled = lock;
-    btnLabel.textContent = lock ? "처리 중…" : (mode === "gif" ? "GIF 만들기" : "MP4로 트리밍");
+    btnLabel.textContent = lock ? t("btnProcessing") : (mode === "gif" ? t("btnGif") : t("btnMp4"));
   }
 
   cancelBtn.addEventListener("click", () => {
@@ -152,7 +154,7 @@ export function initVideoTab() {
     busy = false;
     lockUI(false);
     progressBlock.hidden = true;
-    toast("변환을 취소했어요.");
+    toast(t("tCanceled"));
   });
 
   // ---------- 변환 실행 ----------
@@ -160,17 +162,17 @@ export function initVideoTab() {
     if (!currentFile || busy) return;
     const { start, end } = slider.getRange();
     const dur = end - start;
-    if (dur <= 0) { toast("구간을 다시 선택해주세요.", true); return; }
+    if (dur <= 0) { toast(t("tRangeAgain"), true); return; }
     if (mode === "gif" && dur > 60) {
-      toast("GIF는 60초 이하 구간을 권장해요. 그대로 진행합니다.");
+      toast(t("tGifLong"));
     }
 
     try {
       lockUI(true);
-      showProgress("변환 엔진 준비 중…");
+      showProgress(t("enginePreparing"));
 
       const job = async (ffmpeg) => {
-        showProgress(mode === "gif" ? "GIF 만드는 중…" : "MP4 트리밍 중…");
+        showProgress(mode === "gif" ? t("pGif") : t("pMp4"));
         const ext = (currentFile.name.split(".").pop() || "mp4").toLowerCase();
         const inputName = `in.${ext}`;
         await ffmpeg.writeFile(inputName, await fetchFile(currentFile));
@@ -195,7 +197,7 @@ export function initVideoTab() {
       showResult(blob, outType);
     } catch (err) {
       console.error(err);
-      if (busy) toast(`변환 실패: ${err.message || err}`, true);
+      if (busy) toast(t("tConvertFail", err.message || err), true);
     } finally {
       progressBlock.hidden = true;
       lockUI(false);

@@ -3,6 +3,7 @@ import { initVideoTab } from "./tab-video.js";
 import { initAudioTab } from "./tab-audio.js";
 import { initGifTab } from "./tab-gif.js";
 import { initGuide } from "./guide.js";
+import { initI18n } from "./i18n.js";
 
 function setupTabs() {
   const tabs = [
@@ -35,6 +36,7 @@ function setupTabs() {
   });
 }
 
+initI18n();
 setupTabs();
 initVideoTab();
 initAudioTab();

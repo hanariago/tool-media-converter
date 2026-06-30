@@ -6,6 +6,7 @@
 
 import { loadFFmpeg, isLoaded, usingMultiThread, getFFmpeg, onProgress, terminate } from "./ffmpeg-loader.js";
 import { formatBytes, toast } from "./ui.js";
+import { t } from "./i18n.js";
 
 const banner = document.getElementById("engine-banner");
 const titleEl = document.getElementById("engine-title");
@@ -27,22 +28,20 @@ function showBanner(title, detail) {
 }
 
 async function load() {
-  showBanner("변환 엔진 준비 중…", "ffmpeg.wasm 코어를 처음 한 번 내려받아요.");
+  showBanner(t("enginePreparing"), t("engineFirstDl"));
   await loadFFmpeg({
     forceSingleThread: forcedST,
     onProgress: ({ loadedBytes, totalBytes, percent }) => {
       barEl.style.width = `${percent}%`;
       percentEl.textContent = `${percent}%`;
       detailEl.textContent = percent >= 100
-        ? `${formatBytes(loadedBytes)} 받음 · 초기화 중…`
-        : `${formatBytes(loadedBytes)} / 약 ${formatBytes(totalBytes)} 내려받는 중`;
+        ? t("engineGot", formatBytes(loadedBytes))
+        : t("engineDl", formatBytes(loadedBytes), formatBytes(totalBytes));
     },
   });
   banner.classList.add("is-ready");
-  titleEl.textContent = "변환 엔진 준비 완료";
-  detailEl.textContent = usingMultiThread()
-    ? "멀티스레드 모드로 동작합니다."
-    : "단일스레드 모드로 동작합니다.";
+  titleEl.textContent = t("engineReady");
+  detailEl.textContent = usingMultiThread() ? t("engineMt") : t("engineSt");
   percentEl.textContent = "100%";
   barEl.style.width = "100%";
   readyHideTimer = setTimeout(() => { banner.hidden = true; }, 2000);
@@ -93,8 +92,8 @@ export async function runJob(job, onProg = () => {}) {
       terminate();
       forcedST = true;
       try { sessionStorage.setItem("mc_force_st", "1"); } catch (_) {}
-      toast("멀티스레드가 응답하지 않아 단일스레드로 전환했어요.");
-      showBanner("단일스레드로 전환 중…", "호환 모드 코어를 준비하고 있어요.");
+      toast(t("engineSwitched"));
+      showBanner(t("engineSwitching"), t("engineSwitchDetail"));
       await load();
       aliveRef.alive = false;
       off = onProgress(({ progress }) => { aliveRef.alive = true; onProg(progress); });
